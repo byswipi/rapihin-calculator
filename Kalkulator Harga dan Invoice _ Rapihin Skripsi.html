@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kalkulator Harga dan Invoice | Rapihin Skripsi</title>
+<meta name="description" content="Hitung harga format skripsi, lihat nota langsung, kirim ke WhatsApp Rapihin Skripsi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#212121;--ink:#fff;--mute:#a8a8a8;--line:#3a3a3a;--field:#171717;--raise:#2b2b2b;--orange:#D97757;--blue:#4285F4;--on-o:#fff;
+--display:'Bebas Neue','Arial Narrow',Impact,sans-serif;--body:'DM Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1f1ef;--ink:#0D0D0D;--mute:#5c5c5c;--line:#d9d9d6;--field:#fff;--raise:#fff;--blue:#1A73E8;color-scheme:light}}
+:root[data-theme="light"]{--bg:#f1f1ef;--ink:#0D0D0D;--mute:#5c5c5c;--line:#d9d9d6;--field:#fff;--raise:#fff;--blue:#1A73E8;color-scheme:light}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);padding-bottom:190px}
+.strip{height:8px;background:repeating-linear-gradient(90deg,var(--orange) 0 18px,transparent 18px 28px)}
+main{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:26px 0 18px}
+.brand{font:22px var(--display);letter-spacing:.08em;color:var(--orange);margin:0 0 10px}
+h1{font:400 clamp(34px,9vw,52px)/.95 var(--display);margin:0 0 12px;max-width:12ch}
+.lead{margin:0 0 18px;color:var(--mute);max-width:46ch}
+.ruler{height:14px;background:repeating-linear-gradient(90deg,var(--mute) 0 1px,transparent 1px 10px),repeating-linear-gradient(90deg,var(--mute) 0 1px,transparent 1px 50px);background-size:100% 6px,100% 14px;background-repeat:no-repeat;background-position:0 100%,0 100%;opacity:.5}
+.grid{display:grid;gap:28px}
+h2{font:400 26px var(--display);letter-spacing:.06em;margin:0 0 10px;color:var(--mute)}
+ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px 12px;padding:14px 14px 14px 16px;border-radius:12px;background:var(--raise);border:1px solid var(--line);border-left:5px solid var(--line)}
+.row.on{border-left-color:var(--orange)}
+.nm{font-weight:700;font-size:15px;margin:0;line-height:1.3}
+.un{display:block;font-weight:400;font-size:14px;color:var(--mute)}
+.pr{font:20px/1 var(--display);color:var(--ink);text-align:right;white-space:nowrap}
+.ctl{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.step{display:flex;gap:6px}
+.step button{width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--ink);font:700 22px/1 var(--body);cursor:pointer}
+.step button[data-a="+"]{background:var(--orange);border-color:var(--orange);color:var(--on-o)}
+.step button:disabled{opacity:.35;cursor:default}
+.step input{width:70px;height:44px;text-align:center;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--ink);font:700 18px var(--body)}
+.sb{font-weight:700;color:var(--blue)}
+.inf{position:relative;display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:6px;vertical-align:middle;border-radius:50%;border:1.5px solid var(--blue);background:none;color:var(--blue);font:700 10px/1 var(--body);cursor:pointer;padding:0}
+.inf::after{content:"";position:absolute;inset:-14px}
+.inf[aria-expanded="true"]{background:var(--blue);color:#fff}
+.tip{grid-column:1/-1;margin:0;padding:10px 12px;border-radius:8px;border-left:3px solid var(--blue);background:var(--field);font-size:14px;line-height:1.5}
+.tip[hidden]{display:none}
+:is(button,input,textarea,a):focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sw{display:flex;align-items:center;gap:10px;margin:22px 0 4px;font-weight:700}
+.sw input{width:22px;height:22px;accent-color:var(--orange)}
+.sw span{font-weight:400;color:var(--mute);font-size:14px}
+.f{margin:12px 0 0}.f label{display:block;font-weight:700;margin:0 0 5px}.f small{font-weight:400;color:var(--mute)}
+.f input,.f textarea{width:100%;padding:11px 14px;border-radius:10px;border:1px solid var(--line);background:var(--field);color:var(--ink);font:16px var(--body)}
+.f input{height:48px;padding-top:0;padding-bottom:0}.f textarea{min-height:76px;resize:vertical}
+.adm{display:none}.adm.show{display:block}
+.reset{margin-top:12px;background:none;border:0;color:var(--mute);font:500 15px var(--body);text-decoration:underline;cursor:pointer;min-height:44px;padding:0}
+.paper{background:#fff;color:#0D0D0D;border-radius:4px;padding:26px 22px 22px 40px;position:relative;box-shadow:0 12px 34px rgba(0,0,0,.35);border:1px solid var(--line)}
+.paper::before{content:"";position:absolute;left:24px;top:0;bottom:0;width:1px;background:var(--orange);opacity:.7}
+.paper::after{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(90deg,#D97757 0 14px,transparent 14px 22px)}
+.ph{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
+.pb{font:26px/1 var(--display);letter-spacing:.07em;color:#C0562F}
+.pt{font:34px/1 var(--display);letter-spacing:.05em;text-align:right}
+.meta{font-size:14px;color:#555;margin:0 0 14px}
+.meta b{color:#0D0D0D}
+.ln{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-top:1px dotted #bbb;font-size:15px}
+.ln small{grid-column:1;color:#555;font-size:13px}
+.ln b{color:#1A73E8;text-align:right}
+.emp{margin:18px 0;color:#666;font-size:15px}
+.tr{display:flex;justify-content:space-between;align-items:baseline;padding-top:8px;font-size:15px}
+.tr.big{border-top:2px solid #0D0D0D;margin-top:8px;padding-top:12px}
+.tr.big span:last-child{font:32px/1 var(--display)}
+.tr.sisa span:last-child{font-weight:700;color:#C0562F}
+.pn{margin:14px 0 0;font-size:14px;white-space:pre-wrap;color:#333}
+.pf{margin:16px 0 0;font-size:13px;color:#666}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:2px solid var(--orange);padding:12px 20px calc(14px + env(safe-area-inset-bottom,0px));z-index:5}
+.bi{max-width:1040px;margin:0 auto;display:grid;gap:8px}
+.tot{display:flex;align-items:baseline;justify-content:space-between}.tot .l{color:var(--mute);font-size:14px}.tot .v{font:30px/1 var(--display)}
+.acts{display:flex;gap:8px}
+.cta{flex:1;display:flex;align-items:center;justify-content:center;min-height:52px;border-radius:12px;border:0;background:var(--orange);color:var(--on-o);font:700 16px var(--body);text-decoration:none;cursor:pointer}
+.cta.s{background:var(--raise);color:var(--ink);border:1px solid var(--line)}
+.cta[aria-disabled="true"]{opacity:.45;cursor:not-allowed}
+.hint{margin:0;font-size:14px;color:var(--mute);min-height:1.4em}.hint.err{color:var(--orange);font-weight:700}
+footer{margin-top:22px;color:var(--mute);font-size:14px}footer b{color:var(--ink)}
+.inv .w{display:none}.inv .i{display:flex}.w{display:flex}.i{display:none}
+@media (prefers-reduced-motion:no-preference){.row,.cta,.step button{transition:border-color .15s,transform .08s}.cta:active,.step button:active{transform:scale(.97)}}
+@media (min-width:920px){.grid{grid-template-columns:1fr 440px;align-items:start}.paper-col{position:sticky;top:16px}}
+@media print{body{background:#fff;padding:0}body *{visibility:hidden}#paper,#paper *{visibility:visible}#paper{position:absolute;left:0;top:0;width:100%;box-shadow:none;border:0}}
+</style>
+</head>
+<body id="body">
+<div class="strip" aria-hidden="true"></div>
+<main>
+<header>
+  <p class="brand">RAPIHIN SKRIPSI</p>
+  <h1>Hitung harga format skripsimu</h1>
+  <p class="lead">Tambah layanan, nota langsung terisi. Kirim ke WhatsApp dalam satu ketukan.</p>
+  <div class="ruler" aria-hidden="true"></div>
+</header>
+<div class="grid">
+<section>
+  <h2>PILIH LAYANAN</h2>
+  <ul id="list"></ul>
+  <h2 style="margin-top:26px">DATA PESANAN</h2>
+  <div class="f"><label for="nama">Nama <small>(opsional, ikut ke pesan)</small></label><input id="nama" type="text" autocomplete="name" placeholder="Contoh: Dinda"></div>
+  <label class="sw"><input type="checkbox" id="mode"> Mode invoice <span>untuk admin</span></label>
+  <div class="adm" id="adm">
+    <div class="f"><label for="no">Nomor invoice</label><input id="no" type="text"></div>
+    <div class="f"><label for="dp">Sudah dibayar / DP <small>(Rp, opsional)</small></label><input id="dp" type="text" inputmode="numeric" placeholder="0"></div>
+    <div class="f"><label for="cat">Catatan / info pembayaran <small>(opsional, tampil di invoice)</small></label><textarea id="cat"></textarea></div>
+  </div>
+  <button class="reset" id="reset" type="button">Kosongkan semua isian</button>
+  <footer><p>Kami hanya mengerjakan format, bukan menulis isi atau joki.</p><p><b>@rapihin.skripsi</b> di Instagram dan TikTok</p></footer>
+</section>
+<aside class="paper-col" aria-label="Nota">
+  <div class="paper" id="paper">
+    <div class="ph"><div class="pb">RAPIHIN SKRIPSI</div><div class="pt" id="pt">RINCIAN</div></div>
+    <p class="meta" id="meta"></p>
+    <div id="nota"></div>
+    <div id="tots"></div>
+    <p class="pn" id="pn"></p>
+    <p class="pf">Jasa format penulisan tugas akhir. @rapihin.skripsi</p>
+  </div>
+</aside>
+</div>
+</main>
+<div class="bar" id="barx"><div class="bi">
+  <div class="tot"><span class="l" id="tl">Total harga</span><span class="v" id="total" aria-live="polite">Rp 0</span></div>
+  <div class="acts w"><a class="cta" id="cta" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">Kirim rincian ke WhatsApp</a></div>
+  <div class="acts i"><button class="cta s" id="prt" type="button">Cetak / simpan PDF</button><button class="cta" id="cp" type="button">Salin teks invoice</button></div>
+  <p class="hint" id="hint" aria-live="polite">Isi minimal satu layanan dulu.</p>
+</div></div>
+<script>
+(function(){
+var WA='6285136888979',MAX=9999;
+var S=[
+{id:'isi',n:'Daftar Isi / Tabel / Gambar / Lampiran',u:'per daftar',k:'daftar',p:15000,h:'Pembuatan atau perapian daftar isi, daftar tabel, daftar gambar, atau daftar lampiran beserta nomor halamannya. Dihitung per daftar: satu daftar satu hitungan.'},
+{id:'cap',n:'Captioning',u:'per gambar, tabel, atau lampiran',k:'item',p:1500,h:'Pemberian atau perapian keterangan (caption) pada gambar, tabel, atau lampiran, misalnya "Gambar 2.1 Kerangka Penelitian". Dihitung per gambar, tabel, atau lampiran.'},
+{id:'hdr',n:'Styling Header',u:'per header',k:'header',p:500,h:'Penyeragaman gaya judul bab dan subbab (ukuran huruf, tebal, spasi, dan tingkatan heading) sesuai pedoman kampus. Dihitung per judul.'},
+{id:'mrg',n:'Setting Margin',u:'per section',k:'section',p:2000,h:'Pengaturan margin kertas untuk tiap bagian dokumen. Bagian seperti halaman judul, isi, dan lampiran bisa punya margin berbeda. Dihitung per section (bagian dokumen).'},
+{id:'typo',n:'Cek & Koreksi Typo',u:'per halaman',k:'halaman',p:2000,h:'Pemeriksaan dan perbaikan salah ketik, ejaan, dan tanda baca di setiap halaman. Ini koreksi ketikan, bukan mengubah isi atau argumen tulisanmu. Dihitung per halaman.'},
+{id:'pus',n:'Format Daftar Pustaka',u:'per referensi',k:'referensi',p:2500,h:'Penyusunan daftar pustaka sesuai gaya sitasi yang diminta (misalnya APA), termasuk urutan dan penulisan tiap sumber. Dihitung per referensi.'},
+{id:'ind',n:'Indentasi Paragraf',u:'per halaman',k:'halaman',p:1200,h:'Penyeragaman awal paragraf (menjorok) sesuai pedoman kampus di seluruh halaman. Dihitung per halaman.'}];
+var q={};S.forEach(function(s){q[s.id]=0});
+var $=function(i){return document.getElementById(i)};
+function rp(n){return 'Rp '+String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var d=new Date(),M=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+var tgl=d.getDate()+' '+M[d.getMonth()]+' '+d.getFullYear();
+var p2=function(n){return (n<10?'0':'')+n};
+$('no').value='RS-'+d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())+'-001';
+$('list').innerHTML=S.map(function(s){return '<li class="row" id="r-'+s.id+'"><p class="nm">'+s.n+'<button type="button" class="inf" data-t="'+s.id+'" aria-expanded="false" aria-controls="t-'+s.id+'" aria-label="Penjelasan '+s.n+'">!</button><span class="un">'+s.u+'</span></p><div class="pr">'+rp(s.p)+'</div><div class="ctl"><div class="step"><button type="button" data-a="-" data-id="'+s.id+'" aria-label="Kurangi '+s.n+'" disabled>&minus;</button><input type="text" inputmode="numeric" pattern="[0-9]*" value="0" data-id="'+s.id+'" aria-label="Jumlah '+s.n+'"><button type="button" data-a="+" data-id="'+s.id+'" aria-label="Tambah '+s.n+'">+</button></div><span class="sb" id="s-'+s.id+'"></span></div><div class="tip" id="t-'+s.id+'" hidden>'+s.h+'</div></li>'}).join('');
+function total(){return S.reduce(function(a,s){return a+q[s.id]*s.p},0)}
+function dp(){var v=parseInt($('dp').value.replace(/\D/g,''),10)||0;return v}
+function inv(){return $('mode').checked}
+function lines(){return S.filter(function(s){return q[s.id]>0})}
+function text(){
+ var L=[],nm=$('nama').value.trim(),t=total(),pd=Math.min(dp(),t);
+ if(inv()){L.push('INVOICE RAPIHIN SKRIPSI','No: '+$('no').value,'Tanggal: '+tgl);if(nm)L.push('Kepada: '+nm);}
+ else{L.push('Halo Rapihin Skripsi, aku mau order jasa format skripsi.');if(nm)L.push('Nama: '+nm);}
+ L.push('','Rincian:');
+ lines().forEach(function(s){L.push('- '+s.n+': '+q[s.id]+' '+s.k+' x '+rp(s.p)+' = '+rp(q[s.id]*s.p))});
+ L.push('','Total: '+rp(t));
+ if(inv()){if(pd>0){L.push('Sudah dibayar: '+rp(pd),'Sisa bayar: '+rp(t-pd))}var c=$('cat').value.trim();if(c)L.push('','Catatan:',c);L.push('','Terima kasih!')}
+ else L.push('','Mohon dicek ya. Terima kasih!');
+ return L.join('\n');
+}
+function hint(m,e){var h=$('hint');h.className='hint'+(e?' err':'');h.textContent=m}
+function draw(){
+ var t=total(),on=t>0,I=inv(),pd=Math.min(dp(),t),nm=$('nama').value.trim();
+ $('total').textContent=rp(t);
+ $('pt').textContent=I?'INVOICE':'RINCIAN';
+ $('meta').innerHTML=(I?'No <b>'+esc($('no').value)+'</b><br>':'')+'Tanggal <b>'+tgl+'</b>'+(nm?'<br>Kepada <b>'+esc(nm)+'</b>':'');
+ $('nota').innerHTML=on?lines().map(function(s){return '<div class="ln"><span>'+s.n+'</span><b>'+rp(q[s.id]*s.p)+'</b><small>'+q[s.id]+' '+s.k+' x '+rp(s.p)+'</small></div>'}).join(''):'<p class="emp">Belum ada layanan. Tekan + pada layanan yang kamu butuhkan, nota terisi di sini.</p>';
+ $('tots').innerHTML=on?'<div class="tr big"><span>Total</span><span>'+rp(t)+'</span></div>'+(I&&pd>0?'<div class="tr"><span>Sudah dibayar</span><span>'+rp(pd)+'</span></div><div class="tr sisa"><span>Sisa bayar</span><span>'+rp(t-pd)+'</span></div>':''):'';
+ $('pn').textContent=I?$('cat').value.trim():'';
+ var c=$('cta');c.setAttribute('aria-disabled',on?'false':'true');c.href=on?'https://wa.me/'+WA+'?text='+encodeURIComponent(text()):'#';
+ $('prt').disabled=!on;$('cp').disabled=!on;
+ $('tl').textContent=I&&pd>0?'Sisa bayar':'Total harga';
+ if(I&&pd>0)$('total').textContent=rp(t-pd);
+ hint(on?(I?'Cetak sebagai PDF atau salin teks untuk dikirim ke pelanggan.':'Rincian dan total ikut terkirim sebagai pesan.'):'Isi minimal satu layanan dulu.');
+}
+function row(id){var s=S.filter(function(x){return x.id===id})[0],n=q[id],r=$('r-'+id),i=r.querySelector('input');
+ if(document.activeElement!==i||i.value!==String(n))i.value=n;
+ r.classList.toggle('on',n>0);r.querySelector('[data-a="-"]').disabled=n<=0;r.querySelector('[data-a="+"]').disabled=n>=MAX;
+ $('s-'+id).textContent=n>0?rp(n*s.p):'';draw()}
+function set(id,v){q[id]=Math.max(0,Math.min(MAX,v|0));row(id)}
+$('list').addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(b)set(b.dataset.id,q[b.dataset.id]+(b.dataset.a==='+'?1:-1))});
+$('list').addEventListener('click',function(e){var b=e.target.closest('.inf');if(!b)return;var open=b.getAttribute('aria-expanded')!=='true';document.querySelectorAll('.inf').forEach(function(x){x.setAttribute('aria-expanded','false');$('t-'+x.dataset.t).hidden=true});if(open){b.setAttribute('aria-expanded','true');$('t-'+b.dataset.t).hidden=false}});
+$('list').addEventListener('input',function(e){var i=e.target;if(!i.dataset.id)return;var v=i.value.replace(/\D/g,'').slice(0,4);i.value=v;set(i.dataset.id,v===''?0:parseInt(v,10));i.value=v});
+$('list').addEventListener('focusout',function(e){var i=e.target;if(i.dataset&&i.dataset.id)i.value=q[i.dataset.id]});
+$('list').addEventListener('focusin',function(e){if(e.target.dataset.id)e.target.select()});
+['nama','no','dp','cat'].forEach(function(i){$(i).addEventListener('input',draw)});
+$('mode').addEventListener('change',function(){$('adm').classList.toggle('show',inv());$('barx').classList.toggle('inv',inv());document.getElementById('body').classList.toggle('inv',inv());draw()});
+$('cta').addEventListener('click',function(e){if(this.getAttribute('aria-disabled')==='true'){e.preventDefault();hint('Belum ada layanan. Tekan + pada layanan yang kamu butuhkan.',1)}});
+$('prt').addEventListener('click',function(){try{window.print()}catch(x){hint('Cetak tidak bisa dibuka di sini. Gunakan Salin teks invoice.',1)}});
+$('cp').addEventListener('click',function(){var t=text();
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){hint('Teks invoice tersalin. Tempel ke chat pelanggan.')},function(){hint('Salin diblokir browser. Gunakan Cetak / simpan PDF.',1)})}
+ else hint('Salin tidak didukung browser ini. Gunakan Cetak / simpan PDF.',1)});
+var rb=$('reset'),rt;
+rb.addEventListener('click',function(){
+ if(rb.dataset.s!=='1'){rb.dataset.s='1';rb.textContent='Yakin? Tekan lagi untuk mengosongkan';rt=setTimeout(function(){rb.dataset.s='';rb.textContent='Kosongkan semua isian'},3500);return}
+ clearTimeout(rt);rb.dataset.s='';rb.textContent='Kosongkan semua isian';
+ S.forEach(function(s){q[s.id]=0;row(s.id)});['nama','dp','cat'].forEach(function(i){$(i).value=''});draw()});
+draw();
+})();
+</script>
+</body>
+</html>
